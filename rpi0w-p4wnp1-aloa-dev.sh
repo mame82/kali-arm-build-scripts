@@ -57,7 +57,7 @@ services="apache2 atftpd openssh-server openvpn"
 # iodine: allow DNS tunneling
 # dosfstools: contains fatlabel (used to label FAT32 iamges for UMS)
 # Note on Go: The golang package is version 1.10, so we are missing support for current gopherjs (webclient couldn't be build on Pi) and go modules (replacement for dep)
-extras="autossh avahi-daemon bash-completion bluez bluez-firmware dhcpcd5 dnsmasq dosfstools genisoimage golang haveged hostapd i2c-tools iodine policykit-1 python-configobj python-dev python-pip python-requests python-smbus wpasupplicant"
+extras="autossh avahi-daemon bash-completion dhcpcd5 dnsmasq dosfstools genisoimage golang haveged hostapd i2c-tools iodine policykit-1 python-configobj python-dev python-pip python-requests wpasupplicant"
 
 packages="${arm} ${base} ${services} ${extras}"
 architecture="armel"
@@ -236,12 +236,13 @@ apt-get --yes --allow-change-held-packages install locales-all
 debconf-set-selections /debconf.set
 rm -f /debconf.set
 apt-get update
-apt-get -y install git-core binutils ca-certificates initramfs-tools u-boot-tools
+apt-get -y install git-core binutils ca-certificates initramfs-tools u-boot-tools ssh
 apt-get -y install locales console-common less nano git
 echo "root:toor" | chpasswd
 rm -f /etc/udev/rules.d/70-persistent-net.rules
 export DEBIAN_FRONTEND=noninteractive
 apt-get --yes --allow-change-held-packages install ${packages} || apt-get --yes --fix-broken install
+apt-get --yes --allow-change-held-packages install bluez-firmware bluez libasound2 libasound2-data libdw1 || apt-get --yes --fix-broken install
 apt-get --yes --allow-change-held-packages install ${desktop} ${tools} || apt-get --yes --fix-broken install
 apt-get --yes --allow-change-held-packages dist-upgrade
 apt-get --yes --allow-change-held-packages autoremove
@@ -374,7 +375,7 @@ git clone https://github.com/mame82/nexmon_wifi_covert_channel.git -b p4wnp1 "${
 # Setup build
 cd ${TOPDIR}
 # Re4son kernel 4.14.80 with P4wnP1 patches (dwc2 and brcmfmac)
-git clone --depth 1 https://github.com/Re4son/re4son-raspberrypi-linux -b rpi-4.14.93-re4son-p4wnp1 "${basedir}"/kali-${architecture}/usr/src/kernel
+git clone --depth 1 https://github.com/Re4son/re4son-raspberrypi-linux -b rpi-4.14.80-re4son-p4wnp1 "${basedir}"/kali-${architecture}/usr/src/kernel
 
 
 cd "${basedir}"/kali-${architecture}/usr/src/kernel
